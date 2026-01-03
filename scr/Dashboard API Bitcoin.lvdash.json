@@ -1,0 +1,314 @@
+{
+  "datasets": [
+    {
+      "name": "62d26290",
+      "displayName": "preco_minimo",
+      "queryLines": [
+        "SELECT\n",
+        "    round(valor_brl,2) AS min_price_brl,\n",
+        "    timestamp AS min_timestamp\n",
+        "FROM\n",
+        "    pipeline_api_bitcoin.bitcoin_data.bitcoin_data\n",
+        "WHERE criptomoeda = 'BTC'\n",
+        "ORDER BY valor_brl ASC, timestamp DESC\n",
+        "LIMIT 1"
+      ]
+    },
+    {
+      "name": "bb26fa16",
+      "displayName": "preco_maximo",
+      "queryLines": [
+        "SELECT\n",
+        "    round(valor_brl,2) AS max_price_brl,\n",
+        "    timestamp AS max_timestamp\n",
+        "FROM\n",
+        "    pipeline_api_bitcoin.bitcoin_data.bitcoin_data\n",
+        "WHERE criptomoeda = 'BTC'\n",
+        "ORDER BY valor_brl DESC, timestamp DESC\n",
+        "LIMIT 1"
+      ]
+    },
+    {
+      "name": "33f87cc8",
+      "displayName": "ultimo_preco",
+      "queryLines": [
+        "SELECT\n",
+        "    round(valor_brl,2) AS last_price_brl,\n",
+        "    timestamp AS last_timestamp\n",
+        "FROM\n",
+        "    pipeline_api_bitcoin.bitcoin_data.bitcoin_data\n",
+        "WHERE criptomoeda = 'BTC'\n",
+        "ORDER BY timestamp DESC\n",
+        "LIMIT 1"
+      ]
+    },
+    {
+      "name": "2922b4e1",
+      "displayName": "dados_bitcoin",
+      "queryLines": [
+        "SELECT\n",
+        "    timestamp,\n",
+        "    valor_brl\n",
+        "FROM\n",
+        "    pipeline_api_bitcoin.bitcoin_data.bitcoin_data\n",
+        "WHERE criptomoeda = 'BTC'\n",
+        "ORDER BY timestamp"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "da3c6469",
+      "displayName": "Dashboard",
+      "layout": [
+        {
+          "widget": {
+            "name": "0f5b6450",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\">Última cotação</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "3e9945f9",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\">Maior cotação</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "58ca48c3",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\">Menor cotação</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "8f306f93",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "33f87cc8",
+                  "fields": [
+                    {
+                      "name": "monthly(last_timestamp)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `last_timestamp`)"
+                    },
+                    {
+                      "name": "sum(last_price_brl)",
+                      "expression": "SUM(`last_price_brl`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `last_timestamp`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(last_price_brl)"
+                },
+                "period": {
+                  "fieldName": "monthly(last_timestamp)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "1b4047f6",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "bb26fa16",
+                  "fields": [
+                    {
+                      "name": "monthly(max_timestamp)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `max_timestamp`)"
+                    },
+                    {
+                      "name": "sum(max_price_brl)",
+                      "expression": "SUM(`max_price_brl`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `max_timestamp`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(max_price_brl)"
+                },
+                "period": {
+                  "fieldName": "monthly(max_timestamp)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "9a1f83a1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "62d26290",
+                  "fields": [
+                    {
+                      "name": "monthly(min_timestamp)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `min_timestamp`)"
+                    },
+                    {
+                      "name": "sum(min_price_brl)",
+                      "expression": "SUM(`min_price_brl`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `min_timestamp`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(min_price_brl)"
+                },
+                "period": {
+                  "fieldName": "monthly(min_timestamp)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "9a6190cb",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2922b4e1",
+                  "fields": [
+                    {
+                      "name": "timestamp",
+                      "expression": "`timestamp`"
+                    },
+                    {
+                      "name": "sum(valor_brl)",
+                      "expression": "SUM(`valor_brl`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "timestamp",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(valor_brl)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
